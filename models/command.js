@@ -13,7 +13,7 @@ class Command {
         if (!commandDef.handler instanceof Function) throw new CommandError("Handler is not a function", commandDef);
         this.alias = Array.isArray(commandDef.alias) ? commandDef.alias : [commandDef.alias];
         this._handler = commandDef.handler;
-        this.help = commandDef.help || {};
+        this.help = commandDef.help || null;
         this.filename = filename;
     }
 

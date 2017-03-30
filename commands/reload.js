@@ -14,10 +14,4 @@ function reload(message) {
 module.exports = {
     alias: ["rel", "reload"],
     handler: reload,
-
-    help: {
-        name: "Reload",
-        usage: ";rel | ;reload",
-        description: "Reloads the command list"
-    }
 };

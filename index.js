@@ -31,7 +31,7 @@ bot.on('message', message => {
 });
 
 function executeCommand(command, argv, message) {
-    let startTime = new Date(), commandName = command.help.name || argv[0].substr(1);
+    let startTime = new Date(), commandName = command.alias[0] || argv[0].substr(1);
 
     try {
         let cmdProm = command.execute(message, argv.splice(1), bot);

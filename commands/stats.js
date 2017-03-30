@@ -1,17 +1,9 @@
 const overwatch = require('overwatch-js');
-const RichEmbed = require('discord.js').RichEmbed;
 
 const drawStatGrid = require('../lib/statgrid');
 const log = require('../lib/log');
 
 const battleTagPattern = /^\w+#|-\d{3,6}$/;
-
-class OverwatchStatsError extends Error {
-    constructor(code, message) {
-        this.code = code;
-        super(message);
-    }
-}
 
 function getProfileByTag(tag, region) {
     if (!tag) throw new Error("Attempted to get Overwatch profile where no tag was provided");
@@ -51,5 +43,10 @@ function collectStats(message, params) {
 
 module.exports = {
     alias: ["stats", "profile"],
-    handler: collectStats
+    handler: collectStats,
+
+    help: {
+        usage: "<Battletag>",
+        description: "Gets someone's stats by Battletag"
+    }
 };
