@@ -39,7 +39,7 @@ function fakeAssProfile() {
             final_blows_average: 69,
             healing_done_average: 0,
             objective_kills_average: 42,
-            objective_time_average: 20,
+            objective_time_average: 60 * 60 * 1000,
             games_won: 1,
             games_lost: 0
         }}
