@@ -22,7 +22,7 @@ function set(message) {
             battletag.addTagChannel(message.channel)
         );
     }
-    if (!battleTagPattern.match(battleTag)) return message.reply("the Battletag you specified is invalid");
+    if (!battleTagPattern.test(battleTag)) return message.reply("the Battletag you specified is invalid");
     return battletag.updateBattleTag(message.author.id, battleTag)
         .then(() => message.reply("your new Battletag has been set"));
 }
