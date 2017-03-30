@@ -13,7 +13,7 @@ function getBattleTag(message, params) {
         if (!battleTagPattern.test(params[0])) return message.reply("the Battletag you provided is invalid!");
         return Promise.resolve(params[0]);
     } else {
-        const userId = user.id || message.author.id;
+        const userId = user ? user.id : message.author.id;
         if (userId === "296764768197279744") return Promise.resolve('self');
         return battletag.fetchBattleTag(userId);
     }
