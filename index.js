@@ -4,6 +4,8 @@ const Promise = require('bluebird');
 const config = require('./config.json');
 const commandLoader = require('./commands');
 const log = require('./lib/log');
+const battletag = require('./lib/battletagStorage');
+const db = require('./models/db');
 
 const bot = new Discord.Client();
 const prefix = config.prefix || ';';
@@ -27,6 +29,10 @@ bot.on('message', message => {
             }
         }
         if (!executed) log.error("Command not found:", argv[0].substr(1));
+    } else {
+        if (battletag.isMessageInTagChannel(message)) {
+            return battletag.updateBattleTagFromMessage(message);
+        }
     }
 });
 
@@ -50,7 +56,11 @@ function executeCommand(command, argv, message) {
 }
 
 log.debug("Initializing bot...");
-commandLoader.loadCommands().then(cmds => {
-    bot.commands = cmds;
-    bot.login(config.token);
-});
+Promise.join(
+    commandLoader.loadCommands(),
+    db.connection,
+    cmds => {
+        bot.commands = cmds;
+        bot.login(config.token);
+        battletag.loadTagChannelCache();
+    });
