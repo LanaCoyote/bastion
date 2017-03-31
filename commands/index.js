@@ -5,12 +5,17 @@ const Command = require('../models/command');
 const log = require('../lib/log');
 
 const COMMAND_PATH = __dirname;
+const STATIC_COMMANDS = [
+    new Command({alias: ["hook2.0", "roadhog"], handler:
+        message => message.channel.send("https://clips.twitch.tv/CogentFreezingVultureWholeWheat")}),
+    new Command({alias: ["orisa"], handler: message => message.channel.send("https://gfycat.com/AdorableObviousCondor")})
+];
 
 function loadCommands() {
     log.debug("Loading commands in", COMMAND_PATH, "...");
     return new Promise((ok, fail) => fs.readdir(COMMAND_PATH, (err, files) => err ? fail(err) : ok(files)))
         .map(fileToCommand)
-        .then(commands => commands.filter(command => command instanceof Command))
+        .then(commands => commands.concat(STATIC_COMMANDS).filter(command => command instanceof Command))
         .tap((commands) => log.debug("Loaded", commands.length, "commands!"));
 }
 

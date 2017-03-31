@@ -95,7 +95,7 @@ module.exports = {
     handler: collectStats,
 
     help: {
-        usage: "<Battletag>",
+        usage: "<Battletag>|@<SomeUser> [qp|comp|quickplay|competitive|casual] [<Hero>]",
         description: "Gets someone's stats by Battletag"
     }
 };

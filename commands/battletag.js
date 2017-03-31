@@ -43,7 +43,7 @@ module.exports = {
     },
 
     help: {
-        usage: "@<SomeUser> | set <Battletag>",
+        usage: "@<SomeUser> | set <Battletag>|channel | remove channel",
         description: "Gets the Battletag of a user or sets your Battletag"
     }
 };
