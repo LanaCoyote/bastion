@@ -8,7 +8,11 @@ const COMMAND_PATH = __dirname;
 const STATIC_COMMANDS = [
     new Command({alias: ["hook2.0", "roadhog"], handler:
         message => message.channel.send("https://clips.twitch.tv/CogentFreezingVultureWholeWheat")}),
-    new Command({alias: ["orisa"], handler: message => message.channel.send("https://gfycat.com/AdorableObviousCondor")})
+    new Command({alias: ["orisa"], handler: message => message.channel.send("https://gfycat.com/AdorableObviousCondor")}),
+    new Command({alias: ["dva"], handler: message => message.channel.send("https://gfycat.com/TerribleBoilingKudu")}),
+    new Command({alias: ["rein"], handler: message => message.channel.send("http://i.imgur.com/1gJ0lVN.jpg")}),
+    new Command({alias: ["healing"], handler:
+        message => message.channel.send("https://soundcloud.com/roymakesmusic/every-overwatch-need-healing-at-the-same-time")})
 ];
 
 function loadCommands() {
