@@ -26,6 +26,7 @@ function loadCommands() {
 function reloadCommands(bot) {
     log.debug("Unloading prepared commands...");
     bot.commands.forEach(command => {
+        if (!command.filename) return;
         delete require.cache[require.resolve('./' + command.filename)];
     });
     log.debug("Unloaded", bot.commands.length, "commands!");
