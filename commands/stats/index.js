@@ -1,9 +1,10 @@
 const overwatch = require('overwatch-js');
 const Promise = require('bluebird');
 
-const battletag = require('../lib/battletagStorage');
-const drawStatGrid = require('../lib/statgrid');
-const log = require('../lib/log');
+const battletag = require('../../lib/battletagStorage');
+const drawStatGrid = require('../../lib/statgrid');
+const log = require('../../lib/log');
+const Mapper = require('./mapper');
 
 const battleTagPattern = /^\w+#|-\d{3,6}$/;
 
@@ -19,13 +20,12 @@ function getBattleTag(message, params) {
     }
 }
 
-function getProfileByTag(tag, region) {
+function getProfileByTag(tag, mapper) {
     if (!tag) throw new Error("Attempted to get Overwatch profile where no tag was provided");
     if (tag.includes('#')) tag = tag.replace('#', '-');
-    region = region || "us";
     if (tag === 'self') return Promise.resolve(fakeAssProfile());
 
-    return overwatch.getAll("pc", region, tag)
+    return overwatch.getAll("pc", mapper.region || "us", tag)
 }
 
 function fakeAssProfile() {
@@ -46,17 +46,34 @@ function fakeAssProfile() {
     };
 }
 
+function getSubtitle(profile, mapper) {
+    let subtitle = "";
+    if (mapper.gamemode === "competitive") {
+        if (isNaN(profile.profile.rank)) subtitle += "Unranked";
+        else subtitle += `Rank ${profile.profile.rank}`;
+    } else {
+        subtitle += "Quick Play";
+    }
+
+    if (mapper.hero) {
+        subtitle += " | " + (mapper.hero[0].toUpperCase() + mapper.hero.slice(1).replace('_',' '));
+    }
+
+    return subtitle;
+}
+
 function collectStats(message, params) {
     return getBattleTag(message, params).then(battleTag => {
         if (battleTag === null) return params[0] ?
             message.reply("that user does not have a Battletag set") :
             message.reply("you don't have a Battletag set! Use `!battletag set <your battletag>` to set one");
         if (typeof battleTag !== "string") return;
-        return getProfileByTag(battleTag, params[1])
+        const mapper = new Mapper(battleTag, params.slice(1));
+        return getProfileByTag(battleTag, mapper)
             .then(profile => {
-                return drawStatGrid(profile).then(buffer => {
+                return drawStatGrid(mapper.mapProfileToStats(profile)).then(buffer => {
                     const response = `Stats for ${profile.profile.nick} | Level ${profile.profile.level} | `
-                        + (isNaN(profile.profile.rank) ? "Unranked" : `Rank ${profile.profile.rank}`)
+                        + getSubtitle(profile, mapper)
                         + `\n<${profile.profile.url}>`;
                     message.channel.sendFile(buffer, profile.profile.nick + ".png", response);
                 });
