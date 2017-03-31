@@ -17,10 +17,11 @@ function set(message) {
     const battleTag = message.content.split(" ")[2];
     if (!battleTag) return message.reply("you must provide a Battletag to set");
     if (battleTag === "channel") {
+        if (!message.member.hasPermission("MANAGE_CHANNELS")) return message.reply("you don't have permissions to do that");
         return Promise.join(
             battletag.updateBattleTagsFromChannel(message.channel),
             battletag.addTagChannel(message.channel)
-        );
+        ).then(() => message.reply("channel is now automatically parsing battletags"));
     }
     if (!battleTagPattern.test(battleTag)) return message.reply("the Battletag you specified is invalid");
     return battletag.updateBattleTag(message.author.id, battleTag)
@@ -28,7 +29,9 @@ function set(message) {
 }
 
 function remove(message, params) {
-    return params[1] === "channel" && battletag.removeTagChannel(message.channel);
+    if (!message.member.hasPermission("MANAGE_CHANNELS")) return message.reply("you don't have permissions to do that");
+    return params[1] === "channel" && battletag.removeTagChannel(message.channel)
+            .then(() => message.reply("channel will no longer parse battletags"));
 }
 
 module.exports = {
